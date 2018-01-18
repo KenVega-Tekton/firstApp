@@ -3,11 +3,11 @@ const Order = require("../models/Order");
 function getOrders(req, res) {
   Order.find()
     .then(orders => {
-      console.log(orders);
       res.status(200).jsonp(orders);
-      //res.send("ordenes encontradas");
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+    });
 }
 
 function createOrder(req, res) {
@@ -43,5 +43,4 @@ module.exports = {
   getOrders,
   createOrder,
   updateOrder
-  //otherFunctions separated with commas
 };

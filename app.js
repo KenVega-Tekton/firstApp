@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(volleyball);
 
-app.use("/order", ordersRouter);
+app.use("/orderApi", ordersRouter);
 //app.use("/user", userRouter);
 
 module.exports = app;
