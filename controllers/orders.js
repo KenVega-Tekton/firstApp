@@ -4,7 +4,8 @@ function getOrders(req, res) {
   Order.find()
     .then(orders => {
       console.log(orders);
-      res.send("ordenes encontradas");
+      res.status(200).jsonp(orders);
+      //res.send("ordenes encontradas");
     })
     .catch(err => console.log(err));
 }

@@ -4,13 +4,18 @@
   "description": "for restaurants",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Ken Vega",
   "license": "MIT",
   "dependencies": {
     "body-parser": "1.18.2",
+    "concurrently": "^3.5.1",
     "cors": "2.8.4",
+    "create-react-app": "^1.5.1",
     "express": "4.16.2",
     "mongoose": "5.0.0",
     "volleyball": "1.4.1"
