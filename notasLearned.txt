@@ -1,0 +1,24 @@
+app.js se refiere a todo lo que se refiere a express
+  las rutas, los middlewares que use, etc
+
+app.js lleva las configuraciones
+  también los middlewares que no han sido creados por el desarrollador 
+    como bodyParser, cors, voleyball, etc
+
+
+  app.js es también quien finamente utiliza las rutas de la aplicacion express
+
+---
+
+server.js utiliza app.js (express) junto con mongoDB
+
+--
+
+Los archivos de rutas solo redireccionan la informacion a los controllers (quienes son los que finalmente utilizan la logica del backend)
+
+---
+
+en mongoose, si un modelo tiene relacionado a otro modelo entonces puedes acceder a este con
+  orderDetails : [Dish.schema] 
+    nota las letras minusculas
+    
