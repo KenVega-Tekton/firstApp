@@ -10,33 +10,37 @@ function getOrders(req, res) {
 }
 
 function createOrder(req, res) {
-  console.log(req.body);
-
-  // let orderNew = new Order({
-  //   state: "Comanda",
-  //   clientName: req.body.clientName,
-  //   createdAt: req.body.createdAt,
-  //   paymentType: req.body.paymentType,
-  //   total: req.body.total,
-  //   orderDetails: req.body.orderDetails
-  // });
-
   let orderNew = new Order(req.body);
 
   orderNew
     .save()
     .then(order => {
       res.status(200).jsonp(order);
-      console.log(order);
     })
     .catch(err => {
       res.status(400).jsonp(error);
-      console.log(err);
+    });
+}
+
+function updateOrder(req, res) {
+  Order.findByIdAndUpdate(
+    { _id: req.body.id },
+    { $set: { state: req.body.state } },
+    { new: true }
+  )
+    .then(order => {
+      res.status(200).jsonp(order);
+      console.log("order updated: ", order);
+    })
+    .catch(err => {
+      res.status(400).jsonp(error);
+      console.log("error: ", error);
     });
 }
 
 module.exports = {
   getOrders,
-  createOrder
+  createOrder,
+  updateOrder
   //otherFunctions separated with commas
 };
