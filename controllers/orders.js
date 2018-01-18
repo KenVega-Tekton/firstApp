@@ -1,31 +1,28 @@
 const Order = require("../models/Order");
 
-const orderNew = new Order({
-  state: "comanda",
-  clientName: "John Doe",
-  createdAt: 245,
-  paymentType: "tarjeta",
-  total: 23,
-  orderDetails: [
-    {
-      dishName: "plato 1",
-      dishPrice: 10
-    },
-    {
-      dishName: "plato 2",
-      dishPrice: 13
-    }
-  ]
-});
-
 function getOrders(req, res) {
-  Order.find().then(orders => {
-    console.log(orders);
-    res.send("ordenes encontradas");
-  });
+  Order.find()
+    .then(orders => {
+      console.log(orders);
+      res.send("ordenes encontradas");
+    })
+    .catch(err => console.log(err));
 }
 
 function createOrder(req, res) {
+  console.log(req.body);
+
+  // let orderNew = new Order({
+  //   state: "Comanda",
+  //   clientName: req.body.clientName,
+  //   createdAt: req.body.createdAt,
+  //   paymentType: req.body.paymentType,
+  //   total: req.body.total,
+  //   orderDetails: req.body.orderDetails
+  // });
+
+  let orderNew = new Order(req.body);
+
   orderNew
     .save()
     .then(order => {
