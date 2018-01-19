@@ -11,6 +11,8 @@ function getOrders(req, res) {
 }
 
 function createOrder(req, res) {
+  console.log(req.body);
+
   let orderNew = new Order(req.body);
 
   orderNew

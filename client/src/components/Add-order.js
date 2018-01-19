@@ -6,10 +6,10 @@ class AddOrder extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-md-6 mx-auto">
+          <div className="col-md-8 mx-auto">
             <div className="card card-body">
               <h3 className="text-center">Add Order</h3>
-              <form method="post" action="/orders/add">
+              <form method="post" action="/api/order">
                 <div className="form-group">
                   <label htmlFor="clientName">Client Name</label>
                   <input
