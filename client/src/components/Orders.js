@@ -11,16 +11,88 @@ class Orders extends Component {
   }
 
   getOrders() {
-    axios.get("/api/orders").then(response => {
+    axios.get("/api/order").then(response => {
       this.setState({
         orders: response.data
       });
-      console.log(responses);
+      console.log(response);
     });
   }
 
   componentWillMount() {
     this.getOrders();
+  }
+
+  renderOrders() {
+    if (this.state.orders) {
+      return (
+        <div>
+          {this.state.orders.map((order, id) => {
+            order.createdAt = new Date(order.createdAt).toDateString();
+
+            return (
+              <div className="card" key={id}>
+                <div className="card-header d-flex">
+                  <div className="mr-auto">
+                    ClientName : <strong>{order.clientName}</strong>
+                  </div>
+                  <div className="ml-auto">Today at : {order.createdAt}</div>
+                </div>
+                <div className="card-body">
+                  <table className="table table-striped table-sm table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Dish Name</th>
+                        <th scope="col">Dish Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>Arroz con pollo</td>
+                        <td>11</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Arroz chaufa</td>
+                        <td>10</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>Causa rellena</td>
+                        <td>8</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div className="row">
+                    <div className="col">
+                      <button className="btn btn-warning">
+                        Mark as: In process
+                      </button>
+                    </div>
+                    <div className="col">
+                      <button className="btn btn-success">
+                        Mark as: Completed
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-footer d-flex">
+                  <div className="mr-auto">
+                    Payment : <strong>{order.paymentType}</strong>
+                  </div>
+                  <div className="ml-auto">
+                    Total : <strong>{order.total}</strong>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
   }
 
   render() {
@@ -30,63 +102,7 @@ class Orders extends Component {
           <div className="col-md-8 mx-auto">
             <h3 className="text-center">Orders comanded:</h3>
 
-            <div className="card">
-              <div className="card-header d-flex">
-                <div className="mr-auto">
-                  ClientName : <strong>John Doe</strong>
-                </div>
-                <div className="ml-auto">Today at : 12</div>
-              </div>
-              <div className="card-body">
-                <table className="table table-striped table-sm table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Dish Name</th>
-                      <th scope="col">Dish Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Arroz con pollo</td>
-                      <td>11</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Arroz chaufa</td>
-                      <td>10</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Causa rellena</td>
-                      <td>8</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <div className="row">
-                  <div className="col">
-                    <button className="btn btn-warning">
-                      Mark as: In process
-                    </button>
-                  </div>
-                  <div className="col">
-                    <button className="btn btn-success">
-                      Mark as: Completed
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="card-footer d-flex">
-                <div className="mr-auto">
-                  Payment : <strong>Card</strong>
-                </div>
-                <div className="ml-auto">
-                  Total : <strong>29</strong>
-                </div>
-              </div>
-            </div>
+            {this.renderOrders()}
 
             <h3 className="text-center mt-2">Orders in process:</h3>
 
