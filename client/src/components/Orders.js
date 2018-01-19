@@ -1,6 +1,28 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 class Orders extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      orders: []
+    };
+  }
+
+  getOrders() {
+    axios.get("/api/orders").then(response => {
+      this.setState({
+        orders: response.data
+      });
+      console.log(responses);
+    });
+  }
+
+  componentWillMount() {
+    this.getOrders();
+  }
+
   render() {
     return (
       <div className="container">
