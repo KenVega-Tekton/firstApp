@@ -5,6 +5,9 @@
   "proxy": {
     "/orderApi": {
       "target": "http://localhost:5000"
+    },
+    "/dishApi": {
+      "target": "http://localhost:5000"
     }
   },
   "dependencies": {

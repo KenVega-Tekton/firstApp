@@ -12,6 +12,7 @@
   "author": "Ken Vega",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.17.1",
     "body-parser": "1.18.2",
     "concurrently": "^3.5.1",
     "cors": "2.8.4",
