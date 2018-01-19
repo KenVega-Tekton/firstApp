@@ -25,7 +25,7 @@ function createOrder(req, res) {
 
 function updateOrder(req, res) {
   Order.findByIdAndUpdate(
-    { _id: req.body.id },
+    { _id: req.params.id },
     { $set: { state: req.body.state } },
     { new: true }
   )

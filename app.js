@@ -4,9 +4,7 @@ const volleyball = require("volleyball");
 
 const express = require("express");
 
-const ordersRouter = require("./routes/order");
-//const userRouter = require("./routes/user");
-const dishesRouter = require("./routes/dish");
+const api = require("./routes/api");
 
 const app = express();
 
@@ -15,8 +13,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(volleyball);
 
-app.use("/orderApi", ordersRouter);
-//app.use("/user", userRouter);
-app.use("/dishApi", dishesRouter);
+app.use("/api", api);
 
 module.exports = app;
