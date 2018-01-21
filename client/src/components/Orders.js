@@ -34,7 +34,7 @@ class Orders extends Component {
               order.createdAt = new Date(order.createdAt).toDateString();
               return (
                 <div key={id}>
-                  <OrderCard order={order} />
+                  <OrderCard order={order} id={id} />
                 </div>
               );
             } else {

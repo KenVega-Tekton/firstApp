@@ -11,29 +11,8 @@ class OrderCard extends Component {
           </div>
           <div className="ml-auto">Today at : {this.props.order.createdAt}</div>
         </div>
-        <div className="card-body">
-          <table className="table table-striped table-sm table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Dish Name</th>
-                <th scope="col">Dish Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.order.orderDetails.map((orderDetail, id2) => {
-                return (
-                  <OrderDish
-                    key={id2}
-                    id={id2}
-                    dishName={orderDetail.dishName}
-                    dishPrice={orderDetail.dishPrice}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
 
+        <div className="card-body ">
           <div className="row">
             <div className="col">
               <button className="btn btn-warning">Mark as: In process</button>
@@ -41,8 +20,45 @@ class OrderCard extends Component {
             <div className="col">
               <button className="btn btn-success">Mark as: Completed</button>
             </div>
+            <div className="col">
+              <button
+                className="btn btn-primary"
+                type="button"
+                data-toggle="collapse"
+                data-target={"#collapseExample" + this.props.id}
+                aria-expanded="false"
+                aria-controls={"collapseExample" + this.props.id}
+              >
+                Expand
+              </button>
+            </div>
+          </div>
+
+          <div className="collapse mt-2" id={"collapseExample" + this.props.id}>
+            <table className="table table-striped table-sm table-bordered mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Dish Name</th>
+                  <th scope="col">Dish Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.order.orderDetails.map((orderDetail, id2) => {
+                  return (
+                    <OrderDish
+                      key={id2}
+                      id={id2}
+                      dishName={orderDetail.dishName}
+                      dishPrice={orderDetail.dishPrice}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
+
         <div className="card-footer d-flex">
           <div className="mr-auto">
             Payment : <strong>{this.props.order.paymentType}</strong>
