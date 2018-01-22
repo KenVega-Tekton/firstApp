@@ -8,9 +8,10 @@ class AddOrderDetail3 extends Component {
 
     this.state = {
       dishesAvailable: [],
-      dishesSelected: [
+      dishRowSelected: [
         {
           dishName: "",
+          quantity: 1,
           dishPrice: 0
         }
       ],
@@ -36,14 +37,10 @@ class AddOrderDetail3 extends Component {
 
   addRowDish(event) {
     event.preventDefault();
-    console.log("se presiono el boton");
-
-    console.log(this.state.dishesSelected);
-    // agregar un objeto al estado con un valor inicial de '' y precio 0
 
     this.setState({
-      dishesSelected: [
-        ...this.state.dishesSelected,
+      dishRowSelected: [
+        ...this.state.dishRowSelected,
         { dishName: "", dishPrice: 0 }
       ]
     });
@@ -60,7 +57,7 @@ class AddOrderDetail3 extends Component {
   renderDetails() {
     return (
       <div>
-        {this.state.dishesSelected.map((dish, id) => {
+        {this.state.dishRowSelected.map((dish, id) => {
           return (
             <AddOrderRowDish
               dish={dish}

@@ -15,34 +15,24 @@ class AddOrderRowDish extends Component {
   }
 
   checkingDishName(event) {
-    console.log(event.target.value);
-    this.props.dishesAvailable.find(dish => {
-      if (dish.dishName === event.target.value) {
-        console.log("si existe este plato : ", dish);
+    let foundDish = this.props.dishesAvailable.find(dish => {
+      return dish.dishName === event.target.value ? dish : false;
+    });
 
-        this.setState({
-          oneDish: {
-            dishName: event.target.value,
-            dishPrice: dish.dishPrice
-          }
-        });
-        return true;
-      } else {
-        this.setState({
-          oneDish: {
-            dishName: event.target.value,
-            dishPrice: 0
-          }
-        });
-        return false;
-      }
+    // correr una funcion que actualice el estado del padre de modo que cambia el precio del plato en el que se está señalando
+
+    this.setState({
+      oneDish: foundDish || { dishName: event.target.value, dishPrice: 0 }
     });
   }
+
   render() {
     return (
       <div className="form-row">
         <div className="form-group col-7">
-          <label>Dish 1 -> (S/. {this.state.oneDish.dishPrice})</label>
+          <label>
+            Dish {this.props.id + 1} -> (S/. {this.state.oneDish.dishPrice})
+          </label>
           <input
             type="text"
             className="form-control input-name-dishes"
