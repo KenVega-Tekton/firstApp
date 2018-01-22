@@ -50,12 +50,14 @@ class Orders extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-md-10 mx-auto">
+          <div className="col-md-10 col-lg-6 mx-md-auto mb-2">
             <h3 className="text-center">Orders comanded:</h3>
             {this.renderOrders("comanda")}
-            <h3 className="text-center mt-2">Orders in process:</h3>
+          </div>
+          <div className="col-md-10 col-lg-6 mx-md-auto">
+            <h3 className="text-center ">Orders in process:</h3>
             {this.renderOrders("in process")}
-            <h3 className="text-center mt-2">Orders Done:</h3>
+            <h3 className="text-center mt-2">Orders done:</h3>
             {this.renderOrders("done")}
           </div>
         </div>
