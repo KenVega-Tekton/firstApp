@@ -1,37 +1,12 @@
 import React, { Component } from "react";
 
 class AddOrderRowDish extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      oneDish: {
-        dishName: "",
-        dishPrice: 0
-      }
-    };
-
-    this.checkingDishName = this.checkingDishName.bind(this);
-  }
-
-  checkingDishName(event) {
-    let foundDish = this.props.dishesAvailable.find(dish => {
-      return dish.dishName === event.target.value ? dish : false;
-    });
-
-    // correr una funcion que actualice el estado del padre de modo que cambia el precio del plato en el que se está señalando
-
-    this.setState({
-      oneDish: foundDish || { dishName: event.target.value, dishPrice: 0 }
-    });
-  }
-
   render() {
     return (
       <div className="form-row">
         <div className="form-group col-7">
           <label>
-            Dish {this.props.id + 1} -> (S/. {this.state.oneDish.dishPrice})
+            Dish {this.props.id + 1} -> (S/. {this.props.dish.dishPrice})
           </label>
           <input
             type="text"
@@ -39,8 +14,11 @@ class AddOrderRowDish extends Component {
             list="dishesAvailable"
             required
             autoComplete="off"
-            onChange={this.checkingDishName}
-            value={this.state.oneDish.dishName}
+            onChange={
+              this.props.checkingDishName /*value={this.props.dish.dishName}*/
+            }
+            id={`inputDish${this.props.id}`}
+            value={this.props.dish.dishName}
           />
         </div>
         <div className="form-group col-3">

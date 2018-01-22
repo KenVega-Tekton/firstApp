@@ -20,6 +20,7 @@ class AddOrderDetail3 extends Component {
     };
 
     this.addRowDish = this.addRowDish.bind(this);
+    this.checkingDishName = this.checkingDishName.bind(this);
   }
 
   getDishes() {
@@ -41,7 +42,7 @@ class AddOrderDetail3 extends Component {
     this.setState({
       dishRowSelected: [
         ...this.state.dishRowSelected,
-        { dishName: "", dishPrice: 0 }
+        { dishName: "", quantity: 1, dishPrice: 0 }
       ]
     });
     // el arreglo de objetos renderiza automaticamente el numero de filas
@@ -54,6 +55,29 @@ class AddOrderDetail3 extends Component {
     );
   }
 
+  checkingDishName(event) {
+    //cambiar el estado pero de ese especifico elemento del arregllo
+    // luego ver si es el nombre exacto, si lo es... cambiar el precio de ese objeto especifico
+
+    let arrayFoo = this.state.dishRowSelected;
+
+    arrayFoo[event.target.id.slice(9)].dishName = event.target.value;
+
+    let dishFound = this.state.dishesAvailable.find(dish => {
+      return dish.dishName === event.target.value ? dish : 0;
+    });
+
+    if (dishFound) {
+      arrayFoo[event.target.id.slice(9)].dishPrice = dishFound.dishPrice;
+    } else {
+      arrayFoo[event.target.id.slice(9)].dishPrice = 0;
+    }
+
+    this.setState({
+      dishRowSelected: arrayFoo
+    });
+  }
+
   renderDetails() {
     return (
       <div>
@@ -64,6 +88,7 @@ class AddOrderDetail3 extends Component {
               key={id}
               id={id}
               deleteRowDish={this.deleteRowDish}
+              checkingDishName={this.checkingDishName}
               dishesAvailable={
                 this.state.dishesAvailable ? this.state.dishesAvailable : null
               }
