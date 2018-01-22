@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 //import AddOrderDetail from "./AddOrderDetail";
-import AddOrderDetail2 from "./AddOrderDetail2";
+import AddOrderDetail3 from "./AddOrderDetail3";
 
 class AddOrderForm extends Component {
   render() {
@@ -42,7 +42,7 @@ class AddOrderForm extends Component {
           </label>
         </div>
 
-        <AddOrderDetail2 />
+        <AddOrderDetail3 />
 
         <div className="text-center">
           <button type="submit" className="btn btn-primary">

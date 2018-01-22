@@ -7,8 +7,13 @@ class AddOrderDetail2 extends Component {
 
     this.state = {
       dishesAvailable: [],
-      numberDishes: 0,
-      dishesSelected: [],
+      numberDishes: 1,
+      dishesSelected: [
+        {
+          dishName: "",
+          dishPrice: 0
+        }
+      ],
       totalOwed: 10
     };
   }
@@ -27,22 +32,89 @@ class AddOrderDetail2 extends Component {
   }
 
   changeNumberDishes(event) {
-    console.log("cambio el numero de platos");
-    console.log(event.target.value);
-    this.setState({
-      numberDishes: event.target.value
-    });
-    // el numero de platos cambia el length del arreglo de platos escogidos
-    // los platos escogidos definen el precio total
+    // cuando cambias de valor ese numero, tienes que ver si sube o baja y cuanto baja
+    // dependiendo de cuanto suba o baje tienes que agregar o quitar la misma cantidad de elementos al estado
+    if (event.target.value > 0) {
+      let difference = this.state.numberDishes - event.target.value;
+
+      // si la diferencia es negativa, es que está subiendo el numero de platos
+      // si la diferencia es positiva, es que está bajando el numero de platos
+      // si la diferencia es cero, en realidad no deberia pasar nada
+
+      let fooArray = this.state.dishesSelected;
+
+      if (difference > 0) {
+        for (let i = 0; i < difference; i++) {
+          fooArray.pop();
+        }
+        this.setState({
+          dishesSelected: fooArray
+        });
+      } else if (difference < 0) {
+        difference = difference * -1;
+
+        let fooArray2 = [];
+
+        for (let i = 0; i < difference; i++) {
+          fooArray2.push({
+            dishName: "",
+            dishPrice: 0
+          });
+        }
+
+        fooArray = [...fooArray, ...fooArray2];
+        this.setState({
+          dishesSelected: fooArray
+        });
+      }
+
+      this.setState({
+        numberDishes: event.target.value
+      });
+    }
+  }
+
+  onSelectingDish(event) {
+    // cuando cambias el texto de un plato debes chequear si ese plato esta en tu lista
+    // si lo esta, entonces debes poner su respectivo precio al costado
+    // si no lo es, asegurate de borrar su precio o volverlo cero
   }
 
   renderDetails() {
+    //let dishes = [];
+
     return (
       <div>
         <hr />
 
-        {this.state.dishesSelected.map(dish => {
-          return <div>Hola</div>;
+        {this.state.dishesSelected.map((dish, id) => {
+          return (
+            <div className="form-row" key={id}>
+              <div className="form-group col-8">
+                <label htmlFor={`dishName${id}`}>Dish number {id + 1}</label>
+                <input
+                  type="text"
+                  className="form-control input-name-dishes"
+                  id={`dishName${id}`}
+                  list="dishesAvailable"
+                  onChange={this.onSelectingDish}
+                  required
+                  autoComplete="off"
+                />
+              </div>
+              <div className="form-group col-4">
+                <label htmlFor={`dishPrice${id}`}>Price</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id={`dishPrice${id}`}
+                  readOnly
+                  required
+                  value={dish.dishPrice}
+                />
+              </div>
+            </div>
+          );
         })}
 
         <datalist id="dishesAvailable">
