@@ -29,6 +29,8 @@ class AddOrderRowDish extends Component {
             defaultValue="1"
             min="1"
             required
+            id={`inputQuantity${this.props.id}`}
+            onChange={this.props.changeNumberDish}
           />
         </div>
 

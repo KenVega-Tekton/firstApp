@@ -16,11 +16,12 @@ class AddOrderDetail3 extends Component {
         }
       ],
       numberDishes: 58327,
-      totalOwed: 100
+      totalOwed: 0
     };
 
     this.addRowDish = this.addRowDish.bind(this);
     this.checkingDishName = this.checkingDishName.bind(this);
+    this.changeNumberDish = this.changeNumberDish.bind(this);
   }
 
   getDishes() {
@@ -56,8 +57,8 @@ class AddOrderDetail3 extends Component {
   }
 
   checkingDishName(event) {
-    //cambiar el estado pero de ese especifico elemento del arregllo
-    // luego ver si es el nombre exacto, si lo es... cambiar el precio de ese objeto especifico
+    //cambiar el estado pero de ese especifico elemento del arreglo
+    // luego ver si es el nombre exacto, si lo es... cambiar el precio de ese objeto especifico, sino ponerlo a 0 para indicar que no existe dicho plato
 
     let arrayFoo = this.state.dishRowSelected;
 
@@ -76,6 +77,34 @@ class AddOrderDetail3 extends Component {
     this.setState({
       dishRowSelected: arrayFoo
     });
+
+    this.runFunctionToUpdateTotalPrice(); // tambien se ejecutara cuando cambie la cantidad de platos
+  }
+
+  changeNumberDish(event) {
+    // cuando el usuario cambia el numero de platos, cambia el estado de ese específico plato en el arreglo
+
+    let arrayFoo = this.state.dishRowSelected;
+
+    arrayFoo[event.target.id.slice(13)].quantity = Number(event.target.value);
+
+    this.setState({
+      dishRowSelected: arrayFoo
+    });
+
+    this.runFunctionToUpdateTotalPrice();
+  }
+
+  runFunctionToUpdateTotalPrice() {
+    let total = 0;
+
+    this.state.dishRowSelected.forEach(dish => {
+      total += dish.dishPrice * dish.quantity;
+    });
+
+    this.setState({
+      totalOwed: total
+    });
   }
 
   renderDetails() {
@@ -89,6 +118,7 @@ class AddOrderDetail3 extends Component {
               id={id}
               deleteRowDish={this.deleteRowDish}
               checkingDishName={this.checkingDishName}
+              changeNumberDish={this.changeNumberDish}
               dishesAvailable={
                 this.state.dishesAvailable ? this.state.dishesAvailable : null
               }
