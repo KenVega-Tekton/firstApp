@@ -1,162 +1,180 @@
 import React, { Component } from "react";
 import axios from "axios";
+import AddOrderRowDish from "./AddOrderRowDish";
 
 class AddOrderDetail extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      clientName: "",
+      paymentType: "cash",
       dishesAvailable: [],
-      numberDishes: 1,
-      dishesSelected: []
+      dishRowSelected: [
+        {
+          dishName: "",
+          quantity: 1,
+          dishPrice: 0
+        }
+      ],
+      totalOwed: 0
     };
 
-    axios
-      .get("/api/dish")
-      .then(response => {
-        console.log(response);
-        this.setState({
-          dishesAvailable: response.data
-        });
-      })
-      .catch(err => {
-        console.log(err);
+    this.addRowDish = this.addRowDish.bind(this);
+    this.checkingDishName = this.checkingDishName.bind(this);
+    this.changeNumberDish = this.changeNumberDish.bind(this);
+    this.deleteRowDish = this.deleteRowDish.bind(this);
+    this.runFunctionToUpdateTotalPrice = this.runFunctionToUpdateTotalPrice.bind(
+      this
+    );
+    this.sendOrder = this.sendOrder.bind(this);
+  }
+
+  getDishes() {
+    axios.get("/api/dish").then(response => {
+      this.setState({
+        dishesAvailable: response.data
       });
-
-    this.onSelectingDish = this.onSelectingDish.bind(this);
-    this.updatingPrice = this.updatingPrice.bind(this);
-  }
-
-  onSelectingDish(event) {
-    //tomar el valor del input, si es de un texto que está en datalist. agregarlo al estado con una llave
-    let id = event.target.id.slice(8);
-    id = parseInt(id, 10);
-    let dummyArray = [];
-
-    let element = document.getElementById(`dishPrice${id}`);
-
-    this.state.dishesSelected.map((dishSelected, index) => {
-      // si ya existe objeto con ese id, se borra antes de guardar el nuevo
-      if (dishSelected.dishId === id) {
-        dummyArray = this.state.dishesSelected;
-        dummyArray.splice(index, 1);
-        this.setState({
-          dishesSelected: dummyArray
-        });
-
-        element.value = null;
-      }
-      return 1; // evita el warning
-    });
-
-    this.state.dishesAvailable.map(dish => {
-      if (dish.dishName === event.target.value) {
-        dummyArray = this.state.dishesSelected;
-        dummyArray.push({
-          dishId: id,
-          dishName: dish.dishName,
-          dishPrice: dish.dishPrice
-        });
-
-        this.setState(
-          {
-            dishesSelected: dummyArray
-          },
-          this.updatingPrice(id, dish.dishPrice, dish._id)
-        );
-      }
-      return 1; // evita el warning
+      console.log(response);
     });
   }
 
-  updatingPrice(id, dishPrice, idDishDB) {
-    ////////el precio total solo debe basarse en los platos escogidos. y estos deben actualizarse en base al UI
-    /// si solo se actualiza el precio cuando se agrega un plato entonces habra problemas cuando el comensal quiera cambiar de opinion de plato
-
-    // actualizar el valor a traves del DOM del precio del plato
-    document.getElementById(`dishPrice${id}`).value = dishPrice;
-
-    // actualizar el valor del precio total
-    let totalOwed = 0;
-
-    this.state.dishesSelected.map(dish => {
-      totalOwed += dish.dishPrice;
-      return 1;
-    });
-
-    document.getElementById("totalOwed").value = totalOwed;
-
-    //console.log(idDishDB);
-
-    document.getElementById(`dishIdDB${id}`).value = idDishDB;
+  componentWillMount() {
+    this.getDishes();
   }
 
-  render() {
-    let items = [],
-      dishNameId = "",
-      dishPriceId = "",
-      dishIdDB = "";
+  addRowDish(event) {
+    event.preventDefault();
 
-    for (let i = 0; i < this.state.numberDishes; i++) {
-      dishNameId = `dishName${i}`;
-      dishPriceId = `dishPrice${i}`;
-      dishIdDB = `dishIdDB${i}`;
+    this.setState({
+      dishRowSelected: [
+        ...this.state.dishRowSelected,
+        { dishName: "", quantity: 1, dishPrice: 0 }
+      ]
+    });
+  }
 
-      items.push(
-        <div className="form-row" key={i}>
-          <div className="form-group col-8">
-            <label htmlFor={dishNameId}>Dish number {i + 1}</label>
-            <input
-              type="text"
-              className="form-control input-name-dishes"
-              id={dishNameId}
-              list="dishesAvailable"
-              onChange={this.onSelectingDish}
-              required
-              autoComplete="off"
-            />
-          </div>
-          <div className="form-group col-4">
-            <label htmlFor={dishPriceId}>Price</label>
-            <input
-              type="number"
-              className="form-control"
-              id={dishPriceId}
-              readOnly
-              required
-            />
-          </div>
-          <input hidden id={dishIdDB} name={dishIdDB} />
-        </div>
-      );
+  deleteRowDish(event) {
+    //falta mejorar esta funcion . hay un prolema con asincronia
+
+    event.preventDefault();
+
+    let arrayFoo = this.state.dishRowSelected;
+
+    console.log("antes : ", arrayFoo);
+    arrayFoo.splice(event.target.id.slice(10), 1);
+
+    this.setState({
+      dishRowSelected: arrayFoo
+    });
+
+    this.runFunctionToUpdateTotalPrice();
+  }
+
+  checkingDishName(event) {
+    let arrayFoo = this.state.dishRowSelected;
+
+    arrayFoo[event.target.id.slice(9)].dishName = event.target.value;
+
+    let dishFound = this.state.dishesAvailable.find(dish => {
+      return dish.dishName === event.target.value ? dish : 0;
+    });
+
+    if (dishFound) {
+      arrayFoo[event.target.id.slice(9)].dishPrice = dishFound.dishPrice;
+    } else {
+      arrayFoo[event.target.id.slice(9)].dishPrice = 0;
     }
 
+    this.setState({
+      dishRowSelected: arrayFoo
+    });
+
+    this.runFunctionToUpdateTotalPrice();
+  }
+
+  changeNumberDish(event) {
+    let arrayFoo = this.state.dishRowSelected;
+
+    arrayFoo[event.target.id.slice(13)].quantity = Number(event.target.value);
+
+    this.setState({
+      dishRowSelected: arrayFoo
+    });
+
+    this.runFunctionToUpdateTotalPrice();
+  }
+
+  runFunctionToUpdateTotalPrice() {
+    let total = 0;
+
+    this.state.dishRowSelected.forEach(dish => {
+      total += dish.dishPrice * dish.quantity;
+    });
+
+    this.setState({
+      totalOwed: total
+    });
+  }
+
+  sendOrder(event) {
+    event.preventDefault();
+    console.log(`enviar form`);
+
+    let newOrder = {
+      state: "comanda",
+      clientName: this.state.clientName,
+      paymentType: this.state.paymentType,
+      total: this.state.totalOwed,
+      orderDetails: this.state.dishRowSelected
+    };
+
+    console.log("newOrder que se enviara : ", newOrder);
+
+    axios
+      .post("/api/order", newOrder)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(err => console.log(err));
+
+    /*
+      "state": "comanda",
+      "clientName": "John Doe",
+      "createdAt": 245,
+      "paymentType": "tarjeta",
+      "total": 23,
+      "orderDetails": [
+        {
+          "dishName": "plato 1",
+          "dishPrice": 10
+        },
+        {
+          "dishName": "plato 2",
+          "dishPrice": 13
+        }
+      ]
+    */
+  }
+
+  renderDetails() {
     return (
       <div>
-        <div className="form-group row mt-3">
-          <label htmlFor="numberDishes" className="col-8 col-form-label">
-            Number of dishes:
-          </label>
-          <div className="col-4">
-            <input
-              type="number"
-              min="1"
-              className="form-control"
-              value={this.state.numberDishes}
-              onChange={event => {
-                this.setState({
-                  numberDishes: event.target.value
-                });
-                // deberias realizar update al precio. o al menos el precio deberia tener un componente que reciba como props el precio que se recalcula cada que cambia el numero de platos
-              }}
-              required
+        {this.state.dishRowSelected.map((dish, id) => {
+          return (
+            <AddOrderRowDish
+              dish={dish}
+              key={id}
+              id={id}
+              deleteRowDish={this.deleteRowDish}
+              checkingDishName={this.checkingDishName}
+              changeNumberDish={this.changeNumberDish}
+              dishesAvailable={
+                this.state.dishesAvailable ? this.state.dishesAvailable : null
+              }
             />
-          </div>
-        </div>
-
-        <hr />
-
-        {items}
+          );
+        })}
 
         <datalist id="dishesAvailable">
           {this.state.dishesAvailable
@@ -165,6 +183,80 @@ class AddOrderDetail extends Component {
               ))
             : null}
         </datalist>
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <div className="form-group">
+          <label htmlFor="clientName">Client Name</label>
+          <input
+            type="text"
+            id="clientName"
+            name="clientName"
+            className="form-control"
+            required
+            value={this.state.clientName}
+            onChange={event => {
+              this.setState({ clientName: event.target.value });
+            }}
+          />
+        </div>
+
+        <div className="form-row mt-3 align-items-center">
+          <div className="col-6 d-flex justify-content-center">
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="paymentType"
+                id="inlineRadio1"
+                value="card"
+                onClick={event => {
+                  this.setState({
+                    paymentType: "card"
+                  });
+                }}
+              />
+              <label className="form-check-label" htmlFor="inlineRadio1">
+                Card
+              </label>
+            </div>
+            <div className="form-check form-check-inline">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="paymentType"
+                id="inlineRadio2"
+                value="cash"
+                onClick={event => {
+                  this.setState({
+                    paymentType: "cash"
+                  });
+                }}
+              />
+              <label className="form-check-label" htmlFor="inlineRadio2">
+                Cash
+              </label>
+            </div>
+          </div>
+
+          <div className="col-4">Number of dishes:</div>
+          <div className="col-2">
+            <button
+              onClick={this.addRowDish}
+              className="btn btn-success btn-block"
+            >
+              <i className="fa fa-plus-circle" />
+            </button>
+          </div>
+        </div>
+
+        <hr />
+
+        {this.renderDetails()}
 
         <hr />
 
@@ -178,11 +270,21 @@ class AddOrderDetail extends Component {
               className="form-control"
               id="totalOwed"
               name="totalOwed"
-              defaultValue="0"
+              value={this.state.totalOwed}
               readOnly
               required
             />
           </div>
+        </div>
+
+        <div className="text-center">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={this.sendOrder}
+          >
+            Submit
+          </button>
         </div>
       </div>
     );

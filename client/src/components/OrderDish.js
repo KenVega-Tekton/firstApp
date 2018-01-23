@@ -6,7 +6,7 @@ class OrderDish extends Component {
       <tr>
         <th scope="row">{this.props.id + 1}</th>
         <td>{this.props.dishName}</td>
-        <td>{this.props.dishPrice}</td>
+        <td>{this.props.quantity}</td>
       </tr>
     );
   }

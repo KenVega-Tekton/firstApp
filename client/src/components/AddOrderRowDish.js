@@ -14,9 +14,7 @@ class AddOrderRowDish extends Component {
             list="dishesAvailable"
             required
             autoComplete="off"
-            onChange={
-              this.props.checkingDishName /*value={this.props.dish.dishName}*/
-            }
+            onChange={this.props.checkingDishName}
             id={`inputDish${this.props.id}`}
             value={this.props.dish.dishName}
           />
@@ -39,6 +37,7 @@ class AddOrderRowDish extends Component {
           <button
             onClick={this.props.deleteRowDish}
             className="btn btn-danger btn-block"
+            id={`deleteDish${this.props.id}`}
           >
             <i className="fa fa-trash" />
           </button>

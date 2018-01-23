@@ -40,7 +40,7 @@ class OrderCard extends Component {
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Dish Name</th>
-                  <th scope="col">Dish Price</th>
+                  <th scope="col">Quantity</th>
                 </tr>
               </thead>
               <tbody>
@@ -50,7 +50,7 @@ class OrderCard extends Component {
                       key={id2}
                       id={id2}
                       dishName={orderDetail.dishName}
-                      dishPrice={orderDetail.dishPrice}
+                      quantity={orderDetail.quantity}
                     />
                   );
                 })}

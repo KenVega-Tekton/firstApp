@@ -25,7 +25,7 @@ const OrderSchema = new Schema({
     type: Number,
     required: true
   },
-  orderDetails: [Dish.schema]
+  orderDetails: [{ type: Schema.Types.Mixed, default: [] }]
 });
 
 module.exports = mongoose.model("orders", OrderSchema);
